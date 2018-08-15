@@ -4,20 +4,20 @@ import ColorBtn from './ColorBtn'
 import ColorForm from './ColorForm'
 
 export default class ColorList extends React.Component {
-
+  static navigationOptions ={
+    title:'Available Colors'
+  }
   constructor(){
     super();
     this.ds=new ListView.DataSource({
       rowHasChanged:(r1,r2)=>r1!==r2
     })
-    const colors=[] //,'#00ff00','rgb(225,0,225)','pink','red','green','blue','salmon','#055050'
+    const colors=[] //'#00ff00','rgb(225,0,225)','pink','red','green','blue','salmon','#055050'
     this.state=({
-      backgroundColor:'blue',
       colors,
       DataSource:this.ds.cloneWithRows(colors)
     })
-    this.changeColor=this.changeColor.bind(this)
-    this.newColor=this.newColor.bind(this)
+    // this.newColor=this.newColor.bind(this)
   }
   componentDidMount(){
     AsyncStorage.getItem(
@@ -42,9 +42,7 @@ export default class ColorList extends React.Component {
       JSON.stringify(colors)
     )
   }
-  changeColor(backgroundColor){
-    this.setState({backgroundColor})
-  }
+
   newColor(newColor){
     const colors=[...this.state.colors, newColor]
     console.log(colors)
@@ -57,13 +55,14 @@ export default class ColorList extends React.Component {
   }
 
   render() {
+    const {navigate} =this.props.navigation
     const {backgroundColor,DataSource}=this.state;
 
     return (
       <ScrollView style={[styles.container,{backgroundColor}]}>
         <ListView dataSource={DataSource} renderRow={(color)=>{
-            return (<ColorBtn backgroundColor={color} onSelect={this.changeColor}/>)
-        }}  renderHeader={()=>(
+            return (<ColorBtn backgroundColor={color} onSelect={()=>navigate('Details',{color})}/>)
+        }} enableEmptySections renderHeader={()=>(
           <ColorForm onNewColor={this.newColor}/>
         )}
         >
@@ -72,7 +71,12 @@ export default class ColorList extends React.Component {
     );
   }
 }
-
+ColorList.defaultProps={
+  onColorSelected:f=>f
+}
+// ColorList.propTypes={
+//   onColorSelected: React.propTypes.func
+// }
 const styles = StyleSheet.create({
   container:{
     flex:1,
