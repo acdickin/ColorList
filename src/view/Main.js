@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet,Alert  } from 'react-native';
+import { StyleSheet } from 'react-native';
 import ColorList from './ColorList'
 import ColorInfo from './ColorInfo'
 import {createStackNavigator} from 'react-navigation'
